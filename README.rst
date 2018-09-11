@@ -26,7 +26,7 @@ This is an implementation of the deep-speaker paper from baidu.:
 The dataset used is the VoxCeleb2 audio dataset:
 
 * `VoxCeleb2: Deep Speaker Recognition <https://arxiv.org/abs/1806.05622>`_
-* `The VoxCeleb2 Dataset <http://www.robots.ox.ac.uk/~vgg/data/voxceleb/vox2.html>`
+* `The VoxCeleb2 Dataset <http://www.robots.ox.ac.uk/~vgg/data/voxceleb/vox2.html>`_
 
 Features
 --------
