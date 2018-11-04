@@ -1,0 +1,7 @@
+{
+    "log": {
+        "level": [
+          { "logger": "deep_speaker", "level": "DEBUG"}
+        ]
+    }
+}

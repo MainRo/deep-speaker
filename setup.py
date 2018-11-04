@@ -11,7 +11,11 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = [
+    'rx>=1.6',
+    'cyclotron>=0.5',
+    'cyclotron-std>=0.4',
+]
 
 setup_requirements = [ ]
 
