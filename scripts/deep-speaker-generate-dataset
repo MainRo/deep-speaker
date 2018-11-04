@@ -1,0 +1,30 @@
+#! /usr/bin/env python3
+
+from collections import namedtuple
+from cyclotron import Component
+from cyclotron_aio.runner import run
+import deep_speaker.features as features
+
+import cyclotron_std.sys.argv as argv
+import cyclotron_std.io.file as file
+import cyclotron_std.logging as logging
+import cyclotron_std.os.walk as walk
+
+
+FeaturesDrivers = namedtuple('FeaturesDrivers', [
+    'logging', 'walk', 'file', 'argv'
+])
+
+
+def main():
+    run(
+        Component(call=features.extract_features, input=features.Source),
+        FeaturesDrivers(
+            logging=logging.make_driver(),
+            walk=walk.make_driver(),
+            file=file.make_driver(),
+            argv=argv.make_driver(),
+    ))
+
+
+main()

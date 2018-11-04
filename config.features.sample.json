@@ -1,4 +1,7 @@
 {
+    "dataset": {
+        "voxceleb2_path": "/opt/dataset/voxceleb2/data"
+    },
     "log": {
         "level": [
           { "logger": "deep_speaker", "level": "DEBUG"}

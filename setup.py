@@ -47,4 +47,5 @@ setup(
     url='https://github.com/mainro/deep-speaker',
     version='0.1.0',
     zip_safe=False,
+    scripts=['scripts/deep-speaker-generate-dataset'],
 )
