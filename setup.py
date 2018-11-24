@@ -15,6 +15,9 @@ requirements = [
     'rx>=1.6',
     'cyclotron>=0.5',
     'cyclotron-std>=0.4',
+    'cyclotron-aio>=0.7',
+    'scipy>=1.1',
+    'av>=6.1',
 ]
 
 setup_requirements = [ ]
