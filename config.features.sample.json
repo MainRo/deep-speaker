@@ -1,6 +1,11 @@
 {
     "dataset": {
-        "voxceleb2_path": "/opt/dataset/voxceleb2/data"
+        "voxceleb2_path": "/opt/dataset/voxceleb2/train/aac",
+        "features_path": "/opt/dataset/voxceleb2/train_features"
+    },
+    "features": {
+        "mel_count": 40,
+        "mfcc_count": 13
     },
     "log": {
         "level": [

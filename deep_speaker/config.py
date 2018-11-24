@@ -27,6 +27,7 @@ def read_configuration(source):
 
     config = (
         source.file_response
+        .take(1)
         .filter(lambda i: i.id == "config")
         .flat_map(lambda i: i.data)
         .map(lambda i: json.loads(
