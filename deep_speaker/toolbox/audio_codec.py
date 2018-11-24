@@ -1,9 +1,11 @@
 import av
+import numpy as np
+import scipy.io.wavfile as wavfile
 from io import BytesIO
 
 
 def decode_audio(data):
-    decoded_audio = []
+    decoded_audio = b''
     data = BytesIO(data)
     container = av.open(data)
     resampler = av.AudioResampler('s16', 'mono', 16000)
@@ -12,10 +14,12 @@ def decode_audio(data):
     for packet in container.demux(audio_stream):
         for frame in packet.decode():
             frame = resampler.resample(frame)
-            decoded_audio.extend(frame.planes[0].to_bytes())
+            decoded_audio += frame.planes[0].to_bytes()
 
-    return decoded_audio
+    return np.frombuffer(decoded_audio, dtype=np.int16)
 
 
 def encode_wav(data):
-    pass
+    data_file = BytesIO()
+    wavfile.write(data_file, 16000, data)
+    return data_file.getvalue()

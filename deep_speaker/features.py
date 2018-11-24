@@ -11,16 +11,19 @@ import cyclotron_std.os.walk as walk
 import cyclotron_std.io.file as file
 import cyclotron.router as router
 
+import deep_speaker.toolbox.audio_codec as audio_codec
+
 Source = namedtuple('Source', ['logging', 'file', 'walk', 'argv'])
 Sink = namedtuple('Sink', ['logging', 'file', 'walk'])
 
 
 Feature = namedtuple('Feature', ['path', 'data'])
 
+
 def process_audio(data, configuration):
-    #print(configuration)
     return (data
-        # .do_action(lambda i: print(i))
+        .map(lambda i: audio_codec.decode_audio(i))
+        .map(lambda i: audio_codec.encode_wav(i))
     )
 
 
@@ -44,15 +47,10 @@ def extract_features(sources):
     file_adapter = file.adapter(file_response)
     write_feature_request, write_feature_file = router.make_crossroad_router(file_response)
 
-    def list_files(path):
-        return (path
-            .map(lambda i: walk.Walk(top=i, id='voxceleb2', recursive=True))
-            .let(walk_directory)
-            .filter(lambda i: i.id == 'voxceleb2'))
-
     features = (
         config_sink.configuration
-        .flat_map(lambda configuration: walk_adapter.api.walk(configuration.dataset.voxceleb2_path)
+        .flat_map(lambda configuration: walk_adapter.api.walk(
+            configuration.dataset.voxceleb2_path)
             .flat_map(lambda i: i.files
                 .flat_map(lambda path: file_adapter.api.read(path, mode='rb')
                     .let(process_audio, configuration=configuration.features)
