@@ -11,5 +11,8 @@
         "level": [
           { "logger": "deep_speaker", "level": "DEBUG"}
         ]
+    },
+    "data_preparation": {
+        "cpu_core_count": 4
     }
 }
