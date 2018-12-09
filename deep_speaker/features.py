@@ -10,12 +10,13 @@ from cyclotron.debug import TraceObserver
 import cyclotron_std.logging as logging
 import cyclotron_std.os.walk as walk
 import cyclotron_std.io.file as file
+import cyclotron_aio.stop as stop
 
 import deep_speaker.feature.process_path as path_processor
 
 
 Source = namedtuple('Source', ['logging', 'feature_file', 'media_file', 'file', 'walk', 'argv'])
-Sink = namedtuple('Sink', ['logging', 'feature_file', 'media_file', 'file', 'walk'])
+Sink = namedtuple('Sink', ['logging', 'feature_file', 'media_file', 'file', 'walk', 'stop'])
 
 
 def label_from_path(filename):
@@ -53,9 +54,15 @@ def extract_features(sources):
             # .do_action(lambda i: print("{}: {}".format(threading.get_ident(), i.status)))
         )
         .map(lambda i: "")
+        .share()
     )
 
     logs = features
+
+    exit = (
+        features
+        .ignore_elements()
+    )
 
     return Sink(
         file=file.Sink(request=Observable.merge(
@@ -67,4 +74,5 @@ def extract_features(sources):
         feature_file=file.Sink(request=feature_file_request),
         logging=logging.Sink(request=logs),
         walk=walk.Sink(request=walk_adapter.sink),
+        stop=stop.Sink(control=exit),
     )
