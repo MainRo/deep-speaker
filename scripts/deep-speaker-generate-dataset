@@ -12,7 +12,7 @@ import cyclotron_std.os.walk as walk
 
 
 FeaturesDrivers = namedtuple('FeaturesDrivers', [
-    'logging', 'walk', 'file', 'argv'
+    'logging', 'walk', 'feature_file', 'media_file', 'file', 'argv'
 ])
 
 
@@ -23,6 +23,8 @@ def main():
             logging=logging.make_driver(),
             walk=walk.make_driver(),
             file=file.make_driver(),
+            media_file=file.make_driver(),
+            feature_file=file.make_driver(),
             argv=argv.make_driver(),
     ))
 
