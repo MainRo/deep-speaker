@@ -13,6 +13,7 @@ import cyclotron_std.io.file as file
 import cyclotron_aio.stop as stop
 
 import deep_speaker.feature.process_path as path_processor
+from deep_speaker.dataset.split import split_dataset
 
 
 Source = namedtuple('Source', ['logging', 'feature_file', 'media_file', 'file', 'walk', 'argv'])
@@ -21,7 +22,12 @@ Sink = namedtuple('Sink', ['logging', 'feature_file', 'media_file', 'file', 'wal
 
 def label_from_path(filename):
     parts = filename.split('/')
-    return parts[-1]
+    return parts[-1].split('.')[0]
+
+
+def set_from_path(filename):
+    parts = filename.split('/')
+    return 'train' if parts[-5] == 'dev' else 'test'
 
 
 def extract_features(sources):
@@ -48,9 +54,15 @@ def extract_features(sources):
                 )
             # create sets
             .reduce(
-                lambda acc, i: acc + [{'file': i, 'label': label_from_path(i)}],
+                lambda acc, i: acc + [{
+                    'file': i, 
+                    'label': label_from_path(i),
+                    'set': set_from_path(i),
+                }],
                 seed=[])
-            .do_action(TraceObserver(prefix='sets', trace_next_payload=False))
+            # todo: shuffle
+            .map(lambda i: split_dataset(i, configuration.dataset.dev_set_utterance_count))
+            .do_action(TraceObserver(prefix='sets', trace_next_payload=True))
             # .do_action(lambda i: print("{}: {}".format(threading.get_ident(), i.status)))
         )
         .map(lambda i: "")

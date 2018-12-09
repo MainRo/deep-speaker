@@ -15,6 +15,7 @@ import deep_speaker.toolbox.audio_codec as audio_codec
 
 Feature = namedtuple('Feature', ['path', 'data'])
 
+
 def process_audio(data, configuration):
     return (
         data
@@ -28,7 +29,10 @@ def data_to_feature(data, source_file, configuration):
         configuration.dataset.voxceleb2_path,
         configuration.dataset.features_path)
     sink_file = sink_file.replace('.m4a', '.bin')
-    return Feature(path=sink_file, data=data)
+    return Feature(
+        path=sink_file,
+        data=data
+    )
 
 
 def make_path_processor(file_response, feature_response):
@@ -76,7 +80,7 @@ def make_path_processor(file_response, feature_response):
                     #.do_action(TraceObserver(prefix='write20', trace_next_payload=False))
                     .let(process_audio, configuration=configuration.features)
 
-                    .map(lambda i: data_to_feature(i, media.path, configuration))
+                    .map(lambda i: data_to_feature(i, media.path, configuration))                    
                     #.do_action(TraceObserver(prefix='write21-{}'.format(threading.get_ident()), trace_next_payload=False))
                     # .do_action(lambda i: print(i.path))
                 )
