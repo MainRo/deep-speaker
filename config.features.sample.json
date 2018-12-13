@@ -2,7 +2,8 @@
     "dataset": {
         "voxceleb2_path": "/opt/dataset/voxceleb2/train/aac",
         "features_path": "/opt/dataset/voxceleb2/train_features",
-        "dev_set_utterance_count": 100
+        "dev_set_utterance_count": 100,
+        "test_set_utterance_count": 1000
     },
     "features": {
         "mel_count": 40,
