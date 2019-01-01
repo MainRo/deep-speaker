@@ -3,6 +3,7 @@
     "dataset": {
         "voxceleb2_path": "/opt/dataset/voxceleb2/train/aac",
         "features_path": "/opt/dataset/voxceleb2/train_features",
+        "path": "/opt/dataset/voxceleb2/dataset.json",
         "dev_set_utterance_count": 100,
         "test_set_utterance_count": 1000
     },

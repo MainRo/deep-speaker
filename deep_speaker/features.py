@@ -1,6 +1,7 @@
 from collections import namedtuple
 import deep_speaker.config as config
 import threading
+import json
 
 from rx import Observable
 from rx.concurrency import ThreadPoolScheduler
@@ -18,8 +19,8 @@ import deep_speaker.feature.process_path as path_processor
 from deep_speaker.dataset.split import train_test_split, test_dev_split, pair_set
 
 
-Source = namedtuple('Source', ['logging', 'feature_file', 'media_file', 'file', 'walk', 'random', 'argv'])
-Sink = namedtuple('Sink', ['logging', 'feature_file', 'media_file', 'file', 'walk', 'stop', 'random'])
+Source = namedtuple('Source', ['logging', 'feature_file', 'media_file', 'dataset_file', 'file', 'walk', 'random', 'argv'])
+Sink = namedtuple('Sink', ['logging', 'feature_file', 'media_file', 'dataset_file', 'file', 'walk', 'stop', 'random'])
 
 
 def label_from_path(filename):
@@ -83,10 +84,19 @@ def extract_features(sources):
                     'test': i['test'],
                 })
             )
-            .do_action(TraceObserver(prefix='sets', trace_next_payload=True))
-            # .do_action(lambda i: print("{}: {}".format(threading.get_ident(), i.status)))
         )
-        .map(lambda i: "")
+        .share()
+    )
+
+    # save dataset json file
+    write_dataset_request = (
+        features
+        .map(json.dumps)
+        .with_latest_from(configuration, lambda dataset, configuration:  file.Write(
+               id='write_dataset',
+               path=configuration.dataset.path, data=dataset,
+               mode='w')
+        )
         .share()
     )
 
@@ -96,14 +106,11 @@ def extract_features(sources):
         random_cross_request)
 
     logs = features
-    exit = features.ignore_elements()
+    exit = sources.dataset_file.response.ignore_elements()
 
     return Sink(
-        file=file.Sink(request=Observable.merge(
-            config_sink.file_request,            
-            #file_adapter.sink,
-            #write_feature_request,
-        )),
+        file=file.Sink(request=config_sink.file_request),
+        dataset_file=file.Sink(request=write_dataset_request),
         media_file=file.Sink(request=media_file_request),
         feature_file=file.Sink(request=feature_file_request),
         logging=logging.Sink(request=logs),

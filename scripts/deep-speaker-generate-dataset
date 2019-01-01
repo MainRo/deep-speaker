@@ -14,7 +14,7 @@ import deep_speaker.random as random
 
 FeaturesDrivers = namedtuple('FeaturesDrivers', [
     'logging', 'walk',
-    'feature_file', 'media_file', 'file',
+    'feature_file', 'media_file', 'dataset_file', 'file',
     'argv', 'random', 'stop'
 ])
 
@@ -26,6 +26,7 @@ def main():
             logging=logging.make_driver(),
             walk=walk.make_driver(),
             file=file.make_driver(),
+            dataset_file=file.make_driver(),
             media_file=file.make_driver(),
             feature_file=file.make_driver(),
             argv=argv.make_driver(),
