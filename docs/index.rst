@@ -8,6 +8,7 @@ Welcome to deep-speaker's documentation!
    readme
    installation
    usage
+   dataset
    modules
    contributing
    history
