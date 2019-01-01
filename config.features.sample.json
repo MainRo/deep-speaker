@@ -1,4 +1,5 @@
 {
+    "random_seed": 7,
     "dataset": {
         "voxceleb2_path": "/opt/dataset/voxceleb2/train/aac",
         "features_path": "/opt/dataset/voxceleb2/train_features",

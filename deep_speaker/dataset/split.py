@@ -2,7 +2,7 @@ import itertools
 
 
 def train_test_split(utterances):
-    ''' split the dataset in train/dev/test
+    ''' split the dataset in train/test
 
     The train set is the list of files from the voxceleb2 train set.
     The test set of voxceleb2 is split in two sets, dev/test.
@@ -17,7 +17,7 @@ def train_test_split(utterances):
     Returns
     -------
     dataset : dict
-        a dict containing the train/dev/test sets.
+        a dict containing the train/test sets.
     '''
     dataset = {
         'train': [],
