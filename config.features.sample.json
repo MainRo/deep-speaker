@@ -18,5 +18,16 @@
     },
     "data_preparation": {
         "cpu_core_count": 4
+    },
+    "train": {
+        "eras": [
+            {
+                "epoch_count": 1
+            }
+        ],
+        "batch": {
+            "cpu_core_count": 4,
+            "prefetch_count": 2
+        }
     }
 }
