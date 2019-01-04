@@ -19,16 +19,16 @@ def read_configuration(source):
         ])
     )
 
-    read_config_file = (
-        args
-        .filter(lambda i: i.key == 'config')
-        .map(lambda i: file.Read(id='config', path=i.value))
+    read_config_file = Observable.just(
+        file.Context(id='config', observable=args
+            .filter(lambda i: i.key == 'config')
+            .map(lambda i: file.Read(id='config', path=i.value)))
     )
 
     config = (
         source.file_response
-        .take(1)
         .filter(lambda i: i.id == "config")
+        .flat_map(lambda i: i.observable)
         .flat_map(lambda i: i.data)
         .map(lambda i: json.loads(
             i,
