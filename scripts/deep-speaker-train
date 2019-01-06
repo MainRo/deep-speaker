@@ -4,15 +4,16 @@ from collections import namedtuple
 from cyclotron import Component
 from cyclotron_aio.runner import run
 import deep_speaker.train as train
-import deep_speaker.training.scheduler as scheduler
 
 import cyclotron_std.sys.argv as argv
 import cyclotron_std.io.file as file
 import cyclotron_std.logging as logging
 import cyclotron_aio.stop as stop
 
+import deep_speaker.training.trainer as trainer
+
 TrainDrivers = namedtuple('TrainDrivers', [
-    'scheduler', 'logging', 'file', 'argv', 'stop'
+    'trainer', 'logging', 'file', 'argv', 'stop'
 ])
 
 
@@ -20,7 +21,7 @@ def main():
     run(
         Component(call=train.train, input=train.Source),
         TrainDrivers(
-            scheduler=scheduler.make_driver(),
+            trainer=trainer.make_driver(),
             logging=logging.make_driver(),
             file=file.make_driver(),
             argv=argv.make_driver(),

@@ -1,0 +1,4 @@
+
+
+def adam(loss):
+    pass

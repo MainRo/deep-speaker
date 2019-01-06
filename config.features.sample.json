@@ -20,6 +20,16 @@
         "cpu_core_count": 4
     },
     "train": {
+        "settings": {
+            "optimizer": { 
+                "fn": "deep_speeaker.training.optimier.adam",
+                "args": {}
+            },
+            "loss": {
+                "fn": "deep_speeaker.training.loss.cross_entropy",
+                "args": {}
+            }
+        },
         "eras": [
             {
                 "epoch_count": 1
@@ -29,5 +39,8 @@
             "cpu_core_count": 4,
             "prefetch_count": 2
         }
+    },
+    "model": {
+        "create": "foo",
     }
 }

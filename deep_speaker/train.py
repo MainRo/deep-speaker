@@ -13,6 +13,7 @@ import cyclotron_std.io.file as file
 import cyclotron_aio.stop as stop
 
 import deep_speaker.training.scheduler as scheduler
+import deep_speaker.training.trainer as trainer
 
 
 LoadDatasetSource = namedtuple('LoadDatasetSource', ['file_response', 'path'])
@@ -38,8 +39,8 @@ def load_dataset(source):
     )
 
 
-Source = namedtuple('Source', ['scheduler', 'logging', 'file', 'argv'])
-Sink = namedtuple('Sink', ['scheduler', 'logging', 'file', 'stop'])
+Source = namedtuple('Source', ['trainer', 'logging', 'file', 'argv'])
+Sink = namedtuple('Sink', ['trainer', 'logging', 'file', 'stop'])
 
 
 def train(sources):
@@ -57,19 +58,31 @@ def train(sources):
         path=config_data.map(lambda i: i.dataset.path)
     ))
 
-    # start scheduler
+    # schedule training
     scheduler_init = Observable.zip(dataset.dataset, config_data,
-        lambda dataset, config: scheduler.Initialize(dataset, config.train))
+        lambda dataset, config: scheduler.Schedule(dataset, config.train))
+
+    scheduler_sink = scheduler.schedule(
+        scheduler.Source(feedback=scheduler_init)
+    )
 
     # load batch
 
     # train/eval/save model
+    trainer_init = config_data.map(lambda i: trainer.Initialize(
+        optimizer=i.train.settings.optimizer,
+        loss=i.train.settings.loss,
+    ))
+    trainer_requests = scheduler_sink.command
 
-    logs = sources.scheduler.response
-    exit = Observable.empty() # config_data.ignore_elements()
+    logs = sources.trainer.response
+    exit = Observable.never() # config_data.ignore_elements()
 
     return Sink(
-        scheduler=scheduler.Sink(request=scheduler_init),
+        trainer=trainer.Sink(request=Observable.merge(
+            trainer_init,
+            trainer_requests
+        )),
         file=file.Sink(request=Observable.merge(
             config_sink.file_request,
             dataset.file_request,
