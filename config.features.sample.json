@@ -22,12 +22,16 @@
     "train": {
         "settings": {
             "optimizer": { 
-                "fn": "deep_speeaker.training.optimier.adam",
-                "args": {}
+                "module": "deep_speaker.training.optimizer",
+                "fn": "adam",
+                "kwargs": {
+                    "epsilon": 0.1
+                }
             },
             "loss": {
-                "fn": "deep_speeaker.training.loss.cross_entropy",
-                "args": {}
+                "module": "deep_speaker.training.loss",
+                "fn": "cross_entropy",
+                "kwargs": {}
             }
         },
         "eras": [

@@ -1,3 +1,4 @@
+from importlib import import_module
 from collections import namedtuple
 from rx import Observable
 
@@ -11,6 +12,21 @@ Source = namedtuple('Source', ['response'])
 Initialize = namedtuple('Initialize', ['optimizer', 'loss'])
 
 
+def import_function(spec):
+    module = import_module(spec.module)    
+    fn = getattr(module, spec.fn)
+    return fn
+
+
+def initialize(config):    
+    loss = import_function(config.loss)
+    optimizer = import_function(config.optimizer)
+    optimizer = optimizer(
+        loss(**config.loss.kwargs._asdict()), 
+        **config.optimizer.kwargs._asdict())
+    return
+
+
 def make_driver():
     def driver(sink):
         def on_subscribe(observer):
@@ -22,7 +38,7 @@ def make_driver():
                 elif type(i) is training.EvalRequest:
                     print('Eval')
                 elif type(i) is Initialize:
-                    print(i.optimizer)
+                    initialize(i)
 
             sink.request.subscribe(
                 on_next=on_next,
