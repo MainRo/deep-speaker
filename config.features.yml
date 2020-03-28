@@ -1,0 +1,22 @@
+kafka:
+  endpoint: "localhost"
+topics:
+  - name: voxceleb_files
+  - name: feature_utterance
+    encoder: makinage.encoding.pickle
+operators:
+#  list_files:
+#    factory: deep_speaker.feature.list_files:list_files
+#    sinks:
+#      - voxceleb_files
+  compute_mfcc:
+    factory: deep_speaker.feature.compute_features:compute_features
+    sources:
+      - voxceleb_files
+    sinks:
+      - feature_utterance
+config:
+  dataset:
+    voxceleb2_path: "/home/bipbip/dataset/voxceleb2/sample"
+    dev_set_utterance_count: 5
+    test_set_utterance_count: 5

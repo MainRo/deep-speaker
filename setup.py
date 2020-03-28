@@ -12,10 +12,9 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'rx>=1.6',
-    'cyclotron>=0.5',
-    'cyclotron-std>=0.4',
-    'cyclotron-aio>=0.7',
+    'rx>=3.0',
+    'cyclotron>=1.0',
+    'cyclotron-std>=1.0',
     'scipy>=1.1',
     'av>=6.1',
 ]
