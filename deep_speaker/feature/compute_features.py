@@ -13,7 +13,9 @@ Feature = namedtuple('Feature', ['label', 'data'])
 
 def label_from_path(filename):
     parts = filename.split('/')
-    return parts[-3]
+    label = parts[-3]
+    label = int(label[2:])
+    return label
 
 
 def set_from_path(filename):

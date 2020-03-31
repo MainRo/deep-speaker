@@ -5,10 +5,10 @@ topics:
   - name: feature_utterance
     encoder: makinage.encoding.pickle
 operators:
-#  list_files:
-#    factory: deep_speaker.feature.list_files:list_files
-#    sinks:
-#      - voxceleb_files
+  list_files:
+    factory: deep_speaker.feature.list_files:list_files
+    sinks:
+      - voxceleb_files
   compute_mfcc:
     factory: deep_speaker.feature.compute_features:compute_features
     sources:
@@ -20,3 +20,11 @@ config:
     voxceleb2_path: "/home/bipbip/dataset/voxceleb2/sample"
     dev_set_utterance_count: 5
     test_set_utterance_count: 5
+  train:
+    batch_size: 64
+    learning_rate: 0.01
+    epoch_count: 10
+    model: deep_speaker.model.cnn1:create_model
+    loss: torch.nn:CrossEntropyLoss
+    optimizer: torch.optim:Adam
+
