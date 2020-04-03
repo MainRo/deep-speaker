@@ -1,0 +1,12 @@
+kafka:
+  endpoint: "localhost"
+topics:
+  - name: voxceleb_train_files
+operators:
+  list_files:
+    factory: deep_speaker.feature.list_files:list_files
+    sinks:
+      - voxceleb_train_files
+config:
+  dataset:
+    voxceleb2_path: "/home/bipbip/dataset/voxceleb2/train"

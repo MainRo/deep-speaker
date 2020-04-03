@@ -45,7 +45,17 @@ def filter_banks(data, sample_rate=16000, nfilt=40, nfft=512):
     return filter_banks
 
 
-def compute_mfcc(data, nfft=512, nfilt=40, num_ceps=12, cep_lifter=22):
+def compute_filter_bank(data, nfft=512, nfilt=64):
+    data = pre_emphasis(data)
+    data, frame_length = frame(data)
+    data *= np.hamming(frame_length)
+    data = np.absolute(np.fft.rfft(data, nfft))  # Magnitude of the FFT
+    data = ((1.0 / nfft) * ((data) ** 2))  # Power Spectrum
+    data = filter_banks(data, nfilt=nfilt, nfft=nfft)
+    return data
+
+
+def compute_mfcc(data, nfft=512, nfilt=64, num_ceps=20, cep_lifter=22):
     data = pre_emphasis(data)
     data, frame_length = frame(data)
     data *= np.hamming(frame_length)

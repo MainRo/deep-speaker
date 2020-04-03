@@ -6,7 +6,7 @@ from rxsci.io.file import read
 from cyclotron.debug import trace_observable
 
 import deep_speaker.toolbox.audio_codec as audio_codec
-from deep_speaker.toolbox.audio_features import compute_mfcc
+from deep_speaker.toolbox.audio_features import compute_filter_bank
 
 Feature = namedtuple('Feature', ['label', 'data'])
 
@@ -29,9 +29,7 @@ def process_audio(data):
         ops.map(audio_codec.encode_wav),
         ops.map(lambda i: np.frombuffer(i, dtype=np.int16)),
         ops.map(lambda i: i[0:16000]),
-        ops.do_action(lambda i: print(len(i))),
-        ops.map(compute_mfcc),
-        ops.do_action(lambda i: print(len(i))),
+        ops.map(compute_filter_bank),
     )
 
 
@@ -50,7 +48,6 @@ def compute_features(config, file):
     feature_utterance = file.pipe(
         trace_observable("utterance 1"),
         ops.flat_map(lambda file_path: read(file_path, mode='rb').pipe(
-            trace_observable("utterance 2", trace_next_payload=False),
             process_audio,
             rs.with_latest_from(config),
             ops.starmap(lambda data, config: Feature(
