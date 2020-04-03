@@ -8,6 +8,7 @@ from makinage.data import pull
 
 import numpy as np
 import torch
+from torch.utils.tensorboard import SummaryWriter
 
 
 def load_config(config_file):
@@ -37,8 +38,14 @@ async def train(config):
     model = import_function(config['config']['train']['model'])()
     #model.to(device)
     optimizer = import_function(config['config']['train']['optimizer'])(model.parameters())
+
+    writer = SummaryWriter(config['config']['train']['summary_path'])
     print("train...")
 
+    #writer.add_graph(model, verbose=True)
+    #writer.close()
+
+    step = 0
     for epoch in range(epoch_count):
         print("on epoch {}".format(epoch))
         train_data = pull(
@@ -78,13 +85,19 @@ async def train(config):
 
             # print statistics
             running_loss += loss.item()
-            if i % 2000 == 1999:    # print every 2000 mini-batches
+            if i % 20 == 0:    # print every 2000 mini-batches
+                writer.add_scalar('training loss',
+                            running_loss / 1000,
+                            step)
+
                 print('[%d, %5d] loss: %.3f' %
                     (epoch + 1, i + 1, running_loss / 2000))
                 running_loss = 0.0
 
             i += 1
+            step += 1
 
+    writer.close()
     print('Finished Training')
 
 

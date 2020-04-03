@@ -14,6 +14,7 @@ operators:
       - feature_utterance
 config:
   train:
+    summary_path: /tmp/deep-speaker
     batch_size: 64
     learning_rate: 0.01
     epoch_count: 10
