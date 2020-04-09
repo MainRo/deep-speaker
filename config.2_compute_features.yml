@@ -1,0 +1,44 @@
+kafka:
+  endpoint: "localhost"
+topics:
+  - name: voxceleb_train_files
+  - name: voxceleb_val_files
+  - name: voxceleb_test_files
+  - name: feature_test_utterance
+    encoder: makinage.encoding.pickle
+    partition_selector: deep_speaker:feature_utterance_partition_selector
+  - name: feature_val_utterance
+    encoder: makinage.encoding.pickle
+    partition_selector: deep_speaker:feature_utterance_partition_selector
+  - name: feature_train_utterance
+    encoder: makinage.encoding.pickle
+    partition_selector: deep_speaker:feature_utterance_partition_selector
+operators:
+  compute_train_feature:
+    factory: deep_speaker.feature.compute_features:compute_features
+    sources:
+      - voxceleb_train_files
+    sinks:
+      - feature_train_utterance
+#  compute_val_feature:
+#    factory: deep_speaker.feature.compute_features:compute_features
+#    sources:
+#      - voxceleb_val_files
+#    sinks:
+#      - feature_val_utterance
+#  compute_test_feature:
+#    factory: deep_speaker.feature.compute_features:compute_features
+#    sources:
+#      - voxceleb_test_files
+#    sinks:
+#      - feature_test_utterance
+config:
+  train:
+    summary_path: /tmp/deep-speaker
+    batch_size: 64
+    learning_rate: 0.01
+    epoch_count: 10
+    model: deep_speaker.model.cnn1:create_model
+    loss: torch.nn:CrossEntropyLoss
+    optimizer: torch.optim:Adam
+

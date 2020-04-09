@@ -1,0 +1,22 @@
+kafka:
+  endpoint: "localhost"
+topics:  
+  - name: voxceleb_train_files
+  - name: voxceleb_val_files
+  - name: voxceleb_test_files
+operators:
+  list_train_files:
+    factory: deep_speaker.feature.list_files:list_train_files
+    sinks:
+      - voxceleb_train_files
+      - voxceleb_val_files
+  list_test_files:
+    factory: deep_speaker.feature.list_files:list_files
+    sinks:
+      - voxceleb_test_files
+    
+config:
+  dataset:
+    voxceleb2_train_path: "/home/bipbip/dataset/voxceleb2/train"
+    voxceleb2_test_path: "/home/bipbip/dataset/voxceleb2/test"
+    val_ratio: 0.01

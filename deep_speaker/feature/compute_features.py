@@ -46,7 +46,6 @@ def translate_path(dataset_file, source_path, dest_path):
 def compute_features(config, file):
 
     feature_utterance = file.pipe(
-        trace_observable("utterance 1"),
         ops.flat_map(lambda file_path: read(file_path, mode='rb').pipe(
             process_audio,
             rs.with_latest_from(config),
@@ -54,7 +53,7 @@ def compute_features(config, file):
                 label=label_from_path(file_path),
                 data=data)),
         )),
-        trace_observable("utterance", trace_next_payload=False),
+        #trace_observable("utterance", trace_next_payload=False),
     )
 
     return feature_utterance,
