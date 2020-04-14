@@ -13,6 +13,9 @@ topics:
   - name: feature_train_utterance
     encoder: makinage.encoding.pickle
     partition_selector: deep_speaker:feature_utterance_partition_selector
+regulators:
+  - feedback: feature_train_utterance
+    control: voxceleb_train_files
 operators:
   compute_train_feature:
     factory: deep_speaker.feature.compute_features:compute_features
